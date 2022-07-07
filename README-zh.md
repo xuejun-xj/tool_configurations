@@ -5,3 +5,4 @@
 这个仓库包含了我个人使用的一些工具配置。
 
 - [tmux](https://github.com/xuejun-xj/tool_configurations/tree/main/tmux/)
+- [bash](https://github.com/xuejun-xj/tool_configurations/tree/main/bash/)

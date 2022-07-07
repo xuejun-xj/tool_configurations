@@ -5,3 +5,4 @@
 This repository contains my personal Configurations of several tools.
 
 - [tmux](https://github.com/xuejun-xj/tool_configurations/tree/main/tmux/)
+- [bash](https://github.com/xuejun-xj/tool_configurations/tree/main/bash/)
