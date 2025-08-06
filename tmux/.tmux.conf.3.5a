@@ -1,0 +1,140 @@
+# ~/.tmux.conf
+
+# 修改前缀键
+set -g prefix C-l
+
+# 释放快捷键: 默认前缀键为 C-b
+unbind C-b
+
+# 设定前缀键和命令键之间的时延
+set -sg escape-time 1
+
+# 确保可以向其他程序发送 C-l
+bind C-l send-prefix
+
+# 设定窗口初始索引值
+set -g base-index 1
+
+# 设定面板初始索引值
+setw -g pane-base-index 1
+
+# 设定重新加载配置文件
+bind r source-file ~/.tmux.conf \; display "Reloaded!"
+
+# 分割面板
+bind / split-window -h -c '#{pane_current_path}'	# 垂直分割
+bind - split-window -v -c '#{pane_current_path}'	# 水平分割
+
+# 创建新面板
+bind c new-window -c '#{pane_current_path}'
+
+# 在窗口内的面板移动
+bind h select-pane -L	# 切换到左边面板
+bind j select-pane -D	# 切换到上面面板
+bind k select-pane -U	# 切换到下面面板
+bind l select-pane -R	# 切换到右边面板
+
+# 调整窗口内的面板大小
+bind -r H resize-pane -L 5	# 向左延长5个字符
+bind -r J resize-pane -D 5	# 向下延长5个字符
+bind -r K resize-pane -U 5	# 向上延长5个字符
+bind -r L resize-pane -R 5	# 向右延长5个字符
+
+# 切换面板
+bind n select-pane -t :.+	# 后一个面板
+bind p select-pane -t :.-	# 前一个面板
+
+# 切换窗口
+bind C-n select-window -t :.+	# 前一个窗口
+bind C-p select-window -t :.-	# 后一个窗口
+
+# 设定是否支持鼠标
+set -g mouse on
+
+# 设置默认的终端颜色模式
+# set -g default-terminal xterm-24bit
+set -g default-terminal xterm-256color
+set-option -ga terminal-overrides ",*xterm*:Tc"
+
+# 开启活动通知
+setw -g monitor-activity on
+set -g visual-activity on
+
+# 设置状态栏颜色
+set -g status-fg white	# 前景
+set -g status-bg black	# 背景
+
+# 设置不同 激活/未激活 的窗口样式
+set -g window-style 'fg=colour247,bg=colour236'
+set -g window-active-style 'fg=colour250,bg=black'
+
+# 设置窗口列表的颜色
+setw -g window-status-last-style 'fg=cyan,bg=default,attr=dim'
+
+# 设置活动窗口颜色
+setw -g window-status-current-style 'fg=white,bg=red,attr=bright'
+
+# 设置主面板宽度
+setw -g main-pane-width 140
+
+# 设置状态栏左侧的内容和颜色
+set -g status-left-length 40
+set -g status-left "#[fg=colour245]Session: #S #[fg=colour84]#I #[fg=colour75]#P"
+
+# 设置状态栏右侧的内容和颜色
+set -g status-left '#[fg=colour245]%d %b #[fg=colour256] %R'
+
+# 每 60 秒更新一次状态栏
+set -g status-interval 60
+
+# 设置窗口列表居中显示
+set -g status-justify centre
+
+# 开启 vi 按键
+setw -g mode-keys vi
+set -g status-keys vi
+
+# 最大缓冲行数
+set -g history-limit 10000
+
+# 在相同目录下使用 tmux-panes 脚本开启面板
+# unbind v
+# unbind n
+# bind v send-keys "~/tmux-panes -h" C-m
+# bind n send-keys "~/tmux-panes -v" C-m
+
+# 最大化面板
+unbind Up
+bind Up new-window -d -n tmp \; swap-pane -s tmp.1 \; select-window -t tmp
+unbind Down
+bind Down last-window \; swap-pane -s tmp.1 \; kill-window -t tmp
+
+# 把日志输出到指定文件
+bind P pipe-pane -o "cat >> /tmp/#W.tmux.log" \; display "Toggled logging to /tmp/#W.tmux.log"
+
+###########################################################
+# tmux 插件
+# 进入 tmux session 后，使用 prefix + I 安装
+###########################################################
+
+# List of plugins
+set -g @plugin 'tmux-plugins/tpm'
+set -g @plugin 'tmux-plugins/tmux-sensible'
+
+# Other examples:
+# set -g @plugin 'github_username/plugin_name'
+# set -g @plugin 'github_username/plugin_name#branch'
+# set -g @plugin 'git@github.com:user/plugin'
+# set -g @plugin 'git@bitbucket.com:user/plugin'
+
+# 会话自动保存并重启恢复
+set -g @plugin 'tmux-plugins/tmux-resurrect'
+set -g @plugin 'tmux-plugins/tmux-continuum'
+set -g @continuum-save-interval '15'
+set -g @continuum-restore 'on'
+set -g @resurrect-capture-pane-contents 'on'
+
+# Initialize TMUX plugin manager (keep this line at the very bottom of tmux.conf)
+run '~/.tmux/plugins/tpm/tpm'
+
+###########################################################
